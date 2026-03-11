@@ -12,6 +12,8 @@ import RegisterPage from '@/views/RegisterPage.vue'
 import Dashboard from '@/views/Dashboard.vue'
 import Portafolio from '@/views/Portafolio.vue'
 import ProfilePage from '@/views/ProfilePage.vue'  
+import NewsPage from '@/views/NewsPage.vue'
+import NewsDetail from '@/views/NewsDetail.vue'
 import NotFound from '@/views/NotFound.vue'
 
 import { useAuthStore } from '@/stores/auth'
@@ -38,6 +40,17 @@ const routes = [
         component: RegisterPage, 
         meta: { layout: 'public' } 
       },
+      { path: 'news', 
+        name: 'news', 
+        component: NewsPage, 
+        meta: { layout: 'public' } 
+      },
+      { path: 'news/:id', 
+        name: 'news-detail', 
+        component: NewsDetail, 
+        props: true,
+        meta: { layout: 'public' } 
+      }
     ],
   },
 
@@ -62,7 +75,7 @@ const routes = [
         name: 'profile', 
         component: ProfilePage, 
         meta: { layout: 'default' } 
-      },
+      }
     ],
   },
 

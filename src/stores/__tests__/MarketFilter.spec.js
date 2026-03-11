@@ -2,13 +2,15 @@ import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import MarketFilter from '@/components/ui/MarketFilter.vue'
 
-describe('MarketFilter.vue', () => {
-  it('debe renderizar el input correctamente', () => {
+describe('MarketFilter.vue - Unit Test de UI', () => {
+  
+  it('debe renderizar el input con el placeholder correcto', () => {
     const wrapper = mount(MarketFilter, {
       props: { modelValue: '' }
     })
-    // Verificamos que exista el input
-    expect(wrapper.find('input').exists()).toBe(true)
+    const input = wrapper.find('input')
+    expect(input.exists()).toBe(true)
+    expect(input.attributes('placeholder')).toBe('Buscar activo...')
   })
 
   it('debe emitir el evento update:modelValue cuando el usuario escribe', async () => {
@@ -17,18 +19,37 @@ describe('MarketFilter.vue', () => {
     })
 
     const input = wrapper.find('input')
-    // Simulamos que el usuario escribe "Apple"
-    await input.setValue('Apple')
+    // Simulamos que el usuario escribe "Nvidia"
+    await input.setValue('Nvidia')
 
-    // Verificamos que se haya emitido el evento para actualizar el v-model
+    // Verificamos la emisión del v-model (Módulo 7/8 Core)
     expect(wrapper.emitted()['update:modelValue']).toBeTruthy()
-    expect(wrapper.emitted()['update:modelValue'][0]).toEqual(['Apple'])
+    expect(wrapper.emitted()['update:modelValue'][0]).toEqual(['Nvidia'])
   })
 
-  it('debe mostrar el placeholder correcto', () => {
+  it('debe mostrar el botón de limpiar solo cuando hay texto', async () => {
     const wrapper = mount(MarketFilter, {
       props: { modelValue: '' }
     })
-    expect(wrapper.find('input').attributes('placeholder')).toContain('Buscar')
+    
+    // 1. Inicialmente no debe haber botón X
+    expect(wrapper.find('button').exists()).toBe(false)
+
+    // 2. Al escribir, debe aparecer
+    await wrapper.setProps({ modelValue: 'Apple' })
+    expect(wrapper.find('button').exists()).toBe(true)
+  })
+
+  it('debe limpiar el contenido al hacer clic en el botón X', async () => {
+    const wrapper = mount(MarketFilter, {
+      props: { modelValue: 'Tesla' }
+    })
+
+    const button = wrapper.find('button')
+    await button.trigger('click')
+
+    // Verificamos que emita una cadena vacía para limpiar el filtro
+    expect(wrapper.emitted()['update:modelValue']).toBeTruthy()
+    expect(wrapper.emitted()['update:modelValue'][0]).toEqual([''])
   })
 })

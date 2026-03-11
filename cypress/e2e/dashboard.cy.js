@@ -1,3 +1,4 @@
+// Prueba módulo 7 
 describe('Guerra de Tests: FinchTech Dashboard', () => {
   
   beforeEach(() => {

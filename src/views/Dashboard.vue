@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import Banner from '@/components/dashboard/Banner.vue'
+import Banner from '@/components/dashboard/BannerDinamico.vue'
 import MarketFilter from '@/components/ui/MarketFilter.vue'
 import ActivoRow from '@/components/dashboard/ActivoRow.vue'
 import UltimasTransacciones from '@/components/dashboard/UltimasTransacciones.vue'

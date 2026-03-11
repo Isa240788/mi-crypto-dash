@@ -1,36 +1,48 @@
-# Mi Crypto Dash
+# 🚀 FinchTech Journal & Stock Dash
 
-Mi Crypto Dash es una aplicación web bursátil que permite visualizar datos financieros en tiempo real utilizando la `API gratuita de Amazon Financial`. Está construida con **Vue 3**, **Vite** y utiliza **TailwindCSS** para estilos modernos, **Pinia** para manejo de estado y **ApexCharts** para gráficos interactivos.
+**FinchTech** es una plataforma integral de inteligencia financiera y meteorológica. El proyecto combina un simulador de inversiones en tiempo real con un blog de noticias dinámico y un sistema de monitoreo climático, cumpliendo con los requisitos avanzados del **Módulo 8**.
 
-## 🚀 Características
+---
 
-- Visualización de datos bursátiles y criptomonedas en tiempo real.
+## 🌟 Características Principales (Módulo 8)
 
-- Gráficas interactivas y dinámicas con ApexCharts.
+- 🔐 **Autenticación Robusta:** Sistema de Registro y Login integrado con **Firebase Auth**.
+- 🗞️ **Portal de Noticias (Blog):** Feed dinámico de noticias financieras (Cobre, Litio, Tech) ordenadas cronológicamente desde **Firestore**.
+- 💬 **Interacción Social:** Sistema de comentarios en tiempo real para cada noticia, permitiendo el debate técnico entre usuarios autenticados.
+- 🌦️ **Módulo MeteoVite Pro:** Integración de un widget climático dinámico que utiliza la ubicación del usuario (Geolocalización) y la API de **Open-Meteo**.
+- 🕒 **Historial Inteligente:** Sección de "Últimas noticias revisadas" que se actualiza dinámicamente mediante un Store de **Pinia**.
+- 📈 **Simulador Bursátil:** Visualización de activos financieros en tiempo real con gráficas interactivas de **ApexCharts**.
 
-- Manejo de estado centralizado con Pinia.
+---
 
-- Ruteo dinámico con Vue Router.
+## 🛠️ Stack Tecnológico
 
-- Interfaz moderna y responsiva con TailwindCSS y DaisyUI.
+- **Frontend:** Vue 3 (Composition API) + Vite.
+- **Estilos:** TailwindCSS + DaisyUI (Diseño responsivo y Modo Oscuro/Claro).
+- **Estado:** Pinia (Manejo de estados globales y persistencia).
+- **Backend:** Firebase (Firestore para datos y Auth para seguridad).
+- **APIs:** Alpha Vantage (Finanzas) y Open-Meteo (Clima).
+- **Seguridad:** Sanitización de HTML con **DOMPurify** y protección de rutas con Navigation Guards.
 
-- Integración con Firebase para autenticación y almacenamiento.
+---
 
-- Sanitización de contenido con DOMPurify para mayor seguridad.
+## 📁 Estructura del Proyecto
 
-## 🛠 Tecnologías
-
-- Frontend: Vue 3, Vite, TailwindCSS, DaisyUI
-
-- State Management: Pinia
-
-- Ruteo: Vue Router
-
-- Gráficos: ApexCharts, vue3-apexcharts
-
-- Backend / Autenticación: Firebase
-
-- Seguridad: DOMPurify
+```text
+mi-crypto-dash/
+├─ scripts/         # Scripts de Seeding para Firestore (Noticias)
+├─ src/
+│  ├─ components/   # Componentes modulares (News, Dashboard, Weather)
+│  ├─ composables/  # Lógica reutilizable (useWeather, useTheme)
+│  ├─ services/     # Motores de API y conexión Firebase
+│  ├─ stores/       # Estados de Pinia (Auth, News, History)
+│  └─ views/        # Vistas principales y Detalle de Noticias
+└─ .env             # Variables de entorno protegidas
+```
+## ⚡Visualización del Proyecto
+Home Page |![alt text](image.png)
+Noticias generales | ![alt text](image-1.png)
+Noticia específica | 
 
 ## ⚡Instalación
 
@@ -55,22 +67,6 @@ npm i -D daisyui@latest
 npm run dev
 ```
 
-## 📁 Estructura del proyecto
-
-```text
-mi-crypto-dash/
-├─ public/          # Archivos estáticos
-├─ src/
-│  ├─ assets/       # Imágenes y estilos
-│  ├─ components/   # Componentes Vue
-│  ├─ views/        # Vistas principales
-│  ├─ router/       # Configuración de Vue Router
-│  ├─ store/        # Pinia store
-│  └─ main.js       # Entrada principal
-├─ package.json
-└─ vite.config.js
-```
-
 ## 🔒 Seguridad
 
 - Sanitización de contenido dinámico con DOMPurify para prevenir XSS.
@@ -79,15 +75,32 @@ mi-crypto-dash/
 
 ## ⚙️ Configuración de Firebase
 
-Crea un archivo .env en la raíz del proyecto con tus credenciales de Firebase:
+Crea un archivo .env con tus llaves de Firebase, Alpha Vantage y Unsplash.
 
 ```bash
-VITE_FIREBASE_API_KEY=<tu_api_key>
-VITE_FIREBASE_AUTH_DOMAIN=<tu_auth_domain>
-VITE_FIREBASE_PROJECT_ID=<tu_project_id>
-VITE_FIREBASE_STORAGE_BUCKET=<tu_storage_bucket>
-VITE_FIREBASE_MESSAGING_SENDER_ID=<tu_sender_id>
-VITE_FIREBASE_APP_ID=<tu_app_id>
+# .env.example - EJEMPLO (subir a GitHub)
+# Copie este archivo como .env y complete sus credenciales
+VITE_FIREBASE_API_KEY=su_api_key_aqui
+VITE_FIREBASE_AUTH_DOMAIN=su_proyecto.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=su_proyecto_id
+VITE_FIREBASE_STORAGE_BUCKET=su_proyecto.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=su_sender_id
+VITE_FIREBASE_APP_ID=su_app_id
+VITE_FIREBASE_MEASUREMENT_ID=su_measurement_id
+
+# API Configuration https://newsapi.org/register/ https://www.marketaux.com/register
+VITE_NEWS_API_KEY=your_news_api_key
+VITE_MARKETAUX_API_KEY= your_marketaux_key
+
+#Alpha Vantage API - https://www.alphavantage.co/support/#api-key
+VITE_ALPHA_VANTAGE_KEY=tu_alpha_vantage_key
+
+#Base URL para producción (GitHub Pages)
+VITE_BASE_URL=/nombre-de-tu-api/
+
+# API Unplash para base de imagenes
+VITE_UNSPLASH_KEY=tu_api_key_de_unsplash_aqui
+
 ```
 
 Luego reinicia el servidor de desarrollo.
@@ -167,6 +180,12 @@ Exportar datos:
 - Hover sobre gráficos para ver valores exactos.
 
 - Transiciones suaves al cambiar de vista.
+
+## 👩‍💻 Sobre la Autora: Isabel Guajardo
+Desarrolladora Front-End
+
+🔗 LinkedIn: Isabel Guajardo
+📺 YouTube: @IsabelGuajardo-f1e 
 
 ## 📄 Licencia
 

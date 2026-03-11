@@ -1,8 +1,16 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-base-200 px-4 py-12">
     <div class="w-full max-w-md">
+      
+      <!-- ✅ Botón Volver -->
+      <div class="mb-4 flex justify-start">
+        <router-link to="/" class="btn btn-ghost btn-xs gap-2 text-primary font-black uppercase tracking-widest text-[9px] hover:bg-primary/10 transition-all rounded-xl px-4 py-2">
+          ⬅ Volver al Inicio
+        </router-link>
+      </div>
+      
       <div class="card shadow-2xl bg-base-100 rounded-3xl overflow-hidden border border-base-300">
-        
+       
         <!-- HEADER NEGRO (Igual al Login) -->
         <div class="bg-neutral p-8 text-center text-neutral-content">
           <h2 class="text-3xl font-black tracking-tight text-white">Únete a FinchTech</h2>

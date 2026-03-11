@@ -1,55 +1,52 @@
 // src/services/stockApi.js
+import { MARKET_SYMBOLS } from '@/config/constants'
 
-export const SYMBOLS = ['AAPL','MSFT','GOOGL','AMZN','TSLA','META','NVDA','JPM','JNJ','WMT']
+const KEY = import.meta.env.VITE_ALPHA_VANTAGE_KEY
+const PATH = '/api-acciones/query'
 
 export const obtenerAccionesReales = async () => {
-  console.log('⚠ Usando datos de respaldo (evita CORS)')
-  return SYMBOLS.map(s => obtenerDatosRespaldo(s))
+  try {
+    const requests = MARKET_SYMBOLS.slice(0, 8).map(item => 
+      fetch(`${PATH}?function=GLOBAL_QUOTE&symbol=${item.symbol}&apikey=${KEY}`)
+        .then(res => res.json())
+    )
+    const data = await Promise.all(requests)
+    return data.map((res, i) => {
+      const q = res['Global Quote']
+      const s = MARKET_SYMBOLS[i]
+      if (q && q['05. price']) {
+        return {
+          id: s.symbol, nombre: s.name, simbolo: s.symbol,
+          precio: parseFloat(q['05. price']).toFixed(2),
+          variacion: parseFloat(q['10. change percent']?.replace('%', '') || 0).toFixed(2),
+          sector: s.sector, timestamp: new Date().toISOString()
+        }
+      }
+      return loadBackup(s)
+    })
+  } catch (e) {
+    return MARKET_SYMBOLS.slice(0, 8).map(s => loadBackup(s))
+  }
 }
 
-// Método para asignar las clases de la badge de sector
+// ✅ ESTO ES LO QUE FALTABA PARA QUE ActivoInfo NO EXPLOTE
 export const sectorBadgeClass = (sector) => {
-  switch (sector) {
-    case 'Tecnología': return 'badge badge-primary'
-    case 'Consumo': return 'badge badge-accent'
-    case 'Automotriz': return 'badge badge-info'
-    case 'Financiero': return 'badge badge-warning'
-    case 'Salud': return 'badge badge-success'
-    default: return 'badge badge-ghost'
+  const classes = {
+    'Tecnología': 'badge-primary',
+    'Consumo': 'badge-accent',
+    'Automotriz': 'badge-info',
+    'Financiero': 'badge-warning',
+    'Salud': 'badge-success'
   }
+  return `badge ${classes[sector] || 'badge-ghost'}`
 }
 
-const obtenerSector = (symbol) => {
-  const sectores = {
-    AAPL: 'Tecnología', MSFT: 'Tecnología', GOOGL: 'Tecnología', 
-    AMZN: 'Consumo', TSLA: 'Automotriz', META: 'Tecnología', 
-    NVDA: 'Tecnología', JPM: 'Financiero', JNJ: 'Salud', WMT: 'Consumo'
-  }
-  return sectores[symbol] || 'Otros'
-}
-
-export const obtenerDatosRespaldo = (symbol) => {
-  const respaldo = {
-    AAPL: {nombre: 'Apple Inc.', precio: 175.5},
-    MSFT: {nombre: 'Microsoft', precio: 420.3},
-    GOOGL: {nombre: 'Google', precio: 145.8},
-    AMZN: {nombre: 'Amazon', precio: 185.2},
-    TSLA: {nombre: 'Tesla', precio: 240.15},
-    META: {nombre: 'Meta', precio: 480.75},
-    NVDA: {nombre: 'NVIDIA', precio: 950.2},
-    JPM: {nombre: 'JPMorgan', precio: 185.5},
-    JNJ: {nombre: 'Johnson & Johnson', precio: 160.3},
-    WMT: {nombre: 'Walmart', precio: 65.4}
-  }
-
-  const datos = respaldo[symbol] || {nombre: symbol, precio: 100.0}
+const loadBackup = (item) => {
+  const prices = { AAPL: 245.3, MSFT: 450.75, TSLA: 210.45, NVDA: 980.5 }
   return {
-    id: symbol,
-    nombre: datos.nombre,
-    simbolo: symbol,
-    precio: datos.precio,
-    variacion: parseFloat((Math.random() * 10 - 5).toFixed(2)), // siempre número
-    sector: obtenerSector(symbol),
-    timestamp: new Date().toISOString()
+    id: item.symbol, nombre: item.name, simbolo: item.symbol,
+    precio: prices[item.symbol] || 100.0,
+    variacion: parseFloat((Math.random() * 4 - 2).toFixed(2)),
+    sector: item.sector, timestamp: new Date().toISOString()
   }
 }

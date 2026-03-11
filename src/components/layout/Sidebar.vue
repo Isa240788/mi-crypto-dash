@@ -10,6 +10,7 @@ const menu = [
   { name: 'Dashboard', path: '/default/dashboard', icon: '📊' },
   { name: 'Portafolio', path: '/default/portafolio', icon: '💼' },
   { name: 'Perfil', path: '/default/profile', icon: '👤' },
+  { name: 'Journal', path: '/news', icon: '🗞️' },
 ]
 
 // Función para saber si la ruta está activa

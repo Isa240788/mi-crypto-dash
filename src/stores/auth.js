@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { auth } from '@/services/firebase'
+import { useToastStore } from './toast'
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -7,8 +8,6 @@ import {
   onAuthStateChanged,
   updateProfile
 } from 'firebase/auth'
-
-import { sanitizeInput } from '@/utils/sanitize'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -25,20 +24,23 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    // --- NUEVA ACCIÓN DE REGISTRO (La que faltaba) ---
     async register(email, password) {
       this.loading = true
       this.error = null
+      const toast = useToastStore()
+
       try {
-        const sanitizedEmail = sanitizeInput(email)
-        const userCredential = await createUserWithEmailAndPassword(auth, sanitizedEmail, password)
-        
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password)
         this.user = userCredential.user
+        toast.showToast('¡Bienvenida a FinchTech! Tu cuenta está lista.', 'success')
         return { success: true, user: userCredential.user }
       } catch (err) {
-        this.error = err.message
-        console.error('Error en registro:', err)
-        return { success: false, error: err.message }
+        let msg = 'No se pudo crear la cuenta'
+        if (err.code === 'auth/email-already-in-use') msg = 'Este correo ya está registrado'
+        if (err.code === 'auth/weak-password') msg = 'La contraseña es muy débil'
+        this.error = msg
+        toast.showToast(msg, 'error')
+        return { success: false, error: msg }
       } finally {
         this.loading = false
       }
@@ -47,26 +49,35 @@ export const useAuthStore = defineStore('auth', {
     async login(email, password) {
       this.loading = true
       this.error = null
+      const toast = useToastStore()
       try {
-        const sanitizedEmail = sanitizeInput(email)
-        const userCredential = await signInWithEmailAndPassword(auth, sanitizedEmail, password)
+        // ✅ Corregido: Usamos 'email' directamente, no 'sanitizedEmail'
+        const userCredential = await signInWithEmailAndPassword(auth, email, password)
         this.user = userCredential.user
         this.userAvatar = localStorage.getItem('finch_avatar')
-        return { success: true, user: userCredential.user }
+        
+        toast.showToast('¡Bienvenida de nuevo!', 'success')
+        return { success: true }
       } catch (err) {
-        this.error = err.message
-        return { success: false, error: err.message }
+        let mensaje = 'Error al iniciar sesión'
+        if (err.code === 'auth/invalid-credential') mensaje = 'Correo o contraseña incorrectos'
+        this.error = mensaje
+        toast.showToast(mensaje, 'error')
+        return { success: false, error: mensaje }
       } finally {
         this.loading = false
       }
     },
 
     async logout() {
+      const toast = useToastStore()
       try {
         await signOut(auth)
         this.user = null
+        this.userAvatar = null
+        toast.showToast('Sesión cerrada con éxito.', 'info')
       } catch (err) {
-        console.error('Error al cerrar sesión:', err)
+        toast.showToast('Error al cerrar sesión', 'error')
       }
     },
 
@@ -79,7 +90,6 @@ export const useAuthStore = defineStore('auth', {
         }
         return { success: true }
       } catch (err) {
-        console.error("Error guardando avatar:", err)
         return { success: false, error: err.message }
       }
     },
@@ -93,10 +103,6 @@ export const useAuthStore = defineStore('auth', {
         }
         this.loading = false
       })
-    },
-
-    listenToAuthChanges() {
-      this.initAuthListener()
     }
   }
 })

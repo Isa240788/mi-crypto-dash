@@ -1,22 +1,22 @@
-// src/stores/toast.js
+// src/stores/toast.js 🍞
 import { defineStore } from 'pinia'
-import { reactive } from 'vue'
 
 export const useToastStore = defineStore('toast', {
   state: () => ({
-    show: false,
     message: '',
-    type: 'success', // 'success' | 'error' | 'info'
+    type: 'info', 
+    show: false // 👈 Cambiamos 'visible' por 'show' para que el componente lo entienda
   }),
   actions: {
-    showToast(message, type = 'success', duration = 3000) {
-      this.message = message
+    showToast(msg, type = 'info') {
+      this.message = msg
       this.type = type
-      this.show = true
-
-      setTimeout(() => {
-        this.show = false
-      }, duration)
-    },
-  },
+      this.show = true // 👈 ¡Activamos el show!
+      
+      // Limpiamos después de 3 segundos
+      setTimeout(() => { 
+        this.show = false 
+      }, 3000)
+    }
+  }
 })

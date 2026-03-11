@@ -1,5 +1,9 @@
 {
   "rewrites": [
+    {
+      "source": "/api-acciones/:path*",
+      "destination": "https://www.alphavantage.co*"
+    },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

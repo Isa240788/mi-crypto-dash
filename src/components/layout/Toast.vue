@@ -1,3 +1,4 @@
+<!-- src/components/layout/Toast.vue  -->
 <template>
   <!-- Quitamos las barras invertidas \ que rompen el estilo -->
   <div class="toast toast-top toast-end z-50 p-4">
